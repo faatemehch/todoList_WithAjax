@@ -1,0 +1,83 @@
+{% extends 'base/mainLayout.html' %}
+{% block content %}
+    <div id="user_component" class="shadow">
+        <h3 class="text-center">Dear Sarah!</h3>
+        <hr>
+        <h4 class="text-center">Your Tasks</h4>
+        <hr>
+        <h6 class="text-center">
+            <a href="creatTask.html"> Add New Task <i class="fa fa-plus" style="font-size:20px"></i></a>
+        </h6>
+        <hr>
+        <div class="text-center">
+            <form class="form-inline text-center" id="search_form" method="post" data-url="{% url 'task_list' %}">
+                {% csrf_token %}
+                {{ task_form.task_title }}
+                {#                <input class="form-control mr-sm-2" type="text" placeholder="Create Task" aria-label="Search">#}
+                <button type="button" id="search_btn" class="btn mt-1">Create Task</button>
+            </form>
+        </div>
+        <hr>
+        <div>
+            <div id="task_count">
+                <h6 class="text-center">You Have
+                    <span>1</span> Complete and
+                    <span>6</span> Un-Complete Tasks</h6>
+            </div>
+
+            <table class="table table-bordered" id="task_list">
+                <tbody>
+                {% for task in tasks %}
+                    <tr id="{{ task.id }}">
+                        <td class="text-center numbering_table">{{ forloop.counter }}</td>
+                        <td colspan="2" class="task_title">
+                            {% if task.completed %}
+                                <del>
+                                    {{ task.task_title }}
+                                </del>
+                            {% else %}
+                                {{ task.task_title }}
+                            {% endif %}
+                        </td>
+                        <td colspan="2" class="task_complete"><input type="checkbox"></td>
+                        <td class="text-center">
+                            <a href="creatTask.html" class="delete_task">Edit
+                                <li class="fa fa-edit"></li>
+                            </a>
+                            <a href="delete_task.html" class="update_task">Delete
+                                <li class="fa fa-trash"></li>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $("#search_btn").click(function () {
+                var url = $("#search_form").attr("data-url");
+                var data = $("#search_form").serialize();
+                var table_row_count = $("#task_list tr").length + 1;
+                $.ajax({
+                    url: url,
+                    data: data,
+                    type: 'post',
+                    success: function (response) {
+                        $('#task_list').append(
+                            '<tr><td class="text-center numbering_table"> ' + table_row_count + ' </td><td colspan="2" class="task_title">'
+                            + response.task.task_title +
+                            ' </td> <td colspan="2" class="task_complete"><input type="checkbox"></td> <td class="text-center"> <a href="creatTask.html" class="delete_task">Edit <li class="fa fa-edit"></li> </a> <a href="delete_task.html" class="update_task">Delete <li class="fa fa-trash"></li> </a> </td> </tr>'
+                        )
+                    }
+                })
+                $("#search_form")[0].reset();
+            })
+        });
+    </script>
+
+{% endblock %}
+

@@ -7,7 +7,7 @@ from django.forms.models import model_to_dict
 
 
 def task_list(request):
-    tasks = Task.objects.filter( user=request.user ).all()
+    tasks = Task.objects.filter( user=request.user ).all().order_by( 'date_added' )
     task_form = TaskForm( request.POST or None )
 
     if task_form.is_valid():

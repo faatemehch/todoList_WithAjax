@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, View
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import Task
 from .forms import TaskForm
 from django.http import JsonResponse
@@ -20,5 +21,19 @@ def task_list(request):
     context = {
         'tasks': tasks,
         'task_form': task_form
+    }
+    return render( request, 'task/task_list.html', context )
+
+
+# @csrf_exempt
+def delete_task(request, **kwargs):
+    task = Task.objects.filter( user=request.user, id=kwargs['pk'] )
+    if task is not None:
+        task.delete()
+        return JsonResponse(
+            {'msg': '***'}, safe=False )
+    context = {
+        'tasks': Task.objects.filter( user=request.user ).all().order_by( 'date_added' ),
+        'task_form': TaskForm( request.POST or None )
     }
     return render( request, 'task/task_list.html', context )

@@ -41,12 +41,13 @@
                         </td>
                         <td colspan="2" class="task_complete"><input type="checkbox"></td>
                         <td class="text-center">
-                            <a href="creatTask.html" class="delete_task">Edit
+                            <a href="" class="delete_task">Edit
                                 <li class="fa fa-edit"></li>
                             </a>
-                            <a href="delete_task.html" class="update_task">Delete
+                            <a href="#" class="update_task" data-id="{{ task.id }}">Delete
                                 <li class="fa fa-trash"></li>
                             </a>
+
                         </td>
                     </tr>
                 {% endfor %}
@@ -56,8 +57,9 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
-
         $(document).ready(function () {
+
+
             $("#search_btn").click(function () {
                 var url = $("#search_form").attr("data-url");
                 var data = $("#search_form").serialize();
@@ -70,12 +72,29 @@
                         $('#task_list').append(
                             '<tr><td class="text-center numbering_table"> ' + table_row_count + ' </td><td colspan="2" class="task_title">'
                             + response.task.task_title +
-                            ' </td> <td colspan="2" class="task_complete"><input type="checkbox"></td> <td class="text-center"> <a href="creatTask.html" class="delete_task">Edit <li class="fa fa-edit"></li> </a> <a href="delete_task.html" class="update_task">Delete <li class="fa fa-trash"></li> </a> </td> </tr>'
+                            ' </td> <td colspan="2" class="task_complete"><input type="checkbox"></td> <td class="text-center"> <a href="creatTask.html" class="delete_task"> Edit <li class="fa fa-edit"></li> </a> <a href="" class="update_task" data-id=' + response.task.id + '> Delete <li class="fa fa-trash"></li> </a> </td> </tr>'
                         )
                     }
                 })
                 $("#search_form")[0].reset();
             })
+            $('a').on('click', function () {
+                let confirmation = confirm("are you sure you want to delete the task?");
+                if (confirmation) {
+                    let object_id = $(this).attr('data-id');
+                    let url = 'delete_task/' + object_id;
+                    $.ajax({
+                        url: url,
+                        dataType: 'json',
+                        success: function (response) {
+                            $('#' + object_id).remove();
+                        }
+                    })
+
+                }
+            })
+
+
         });
     </script>
 

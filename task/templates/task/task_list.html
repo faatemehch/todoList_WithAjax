@@ -39,9 +39,11 @@
                                 {{ task.task_title }}
                             {% endif %}
                         </td>
-                        <td colspan="2" class="task_complete"><input type="checkbox"></td>
+                        <td colspan="2" class="task_complete">
+                            <input type="checkbox" {% if task.completed %} checked {% endif %}>
+                        </td>
                         <td class="text-center">
-                            <a href="" class="delete_task">Edit
+                            <a href="" class="delete_task" data-id="{{ task.id }}">Done
                                 <li class="fa fa-edit"></li>
                             </a>
                             <a href="#" class="update_task" data-id="{{ task.id }}">Delete
@@ -70,15 +72,15 @@
                     type: 'post',
                     success: function (response) {
                         $('#task_list').append(
-                            '<tr><td class="text-center numbering_table"> ' + table_row_count + ' </td><td colspan="2" class="task_title">'
+                            '<tr id=' + response.task.id + '><td class="text-center numbering_table"> ' + table_row_count + ' </td><td colspan="2" class="task_title">'
                             + response.task.task_title +
-                            ' </td> <td colspan="2" class="task_complete"><input type="checkbox"></td> <td class="text-center"> <a href="creatTask.html" class="delete_task"> Edit <li class="fa fa-edit"></li> </a> <a href="" class="update_task" data-id=' + response.task.id + '> Delete <li class="fa fa-trash"></li> </a> </td> </tr>'
+                            ' </td> <td colspan="2" class="task_complete"><input type="checkbox"></td> <td class="text-center"> <a href="" class="delete_task" data-id=' + response.task.id + '> Done <li class="fa fa-edit"></li> </a> <a href="#" class="update_task" data-id=' + response.task.id + '>Delete<li class="fa fa-trash"></li> </a> </td> </tr>'
                         )
                     }
                 })
                 $("#search_form")[0].reset();
             })
-            $('a').on('click', function () {
+            $('.update_task').on('click', function () {
                 let confirmation = confirm("are you sure you want to delete the task?");
                 if (confirmation) {
                     let object_id = $(this).attr('data-id');
@@ -90,12 +92,26 @@
                             $('#' + object_id).remove();
                         }
                     })
-
                 }
             })
 
-
-        });
+            $('.delete_task').on('click', function () {
+                let object_id = $(this).attr('data-id');
+                let url = 'complete_task/' + object_id;
+                $.ajax({
+                    url: url,
+                    dataType: 'json',
+                    success: function (response) {
+                        $('#task_list').append(
+                            '<tr id=' + response.task.id + '><td class="text-center numbering_table"> ' + table_row_count + ' </td><td colspan="2" class="task_title">'
+                            + response.task.task_title +
+                            ' </td> <td colspan="2" class="task_complete"><input type="checkbox"></td> <td class="text-center"> <a href="creatTask.html" class="delete_task" data-id=' + response.task.id + '> Done <li class="fa fa-edit"></li> </a> <a href="#" class="update_task" data-id=' + response.task.id + '>Delete<li class="fa fa-trash"></li> </a> </td> </tr>'
+                        )
+                    }
+                })
+            })
+        })
+        ;
     </script>
 
 {% endblock %}

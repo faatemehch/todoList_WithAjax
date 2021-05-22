@@ -27,7 +27,7 @@ def task_list(request):
 
 # @csrf_exempt
 def delete_task(request, **kwargs):
-    task = Task.objects.filter( user=request.user, id=kwargs['pk'] )
+    task = Task.objects.filter( user=request.user, id=kwargs['pk'] ).first()
     if task is not None:
         task.delete()
         return JsonResponse(
@@ -37,3 +37,20 @@ def delete_task(request, **kwargs):
         'task_form': TaskForm( request.POST or None )
     }
     return render( request, 'task/task_list.html', context )
+
+
+def complete_task(request, **kwargs):
+    task = Task.objects.filter( user=request.user, id=kwargs['pk'] ).first()
+    if task is not None:
+        if task.completed:
+            task.completed = False
+        else:
+            task.completed = True
+        task.save()
+        return JsonResponse( {'task': model_to_dict( task )}, status=200 )
+
+    # context = {
+    #     'tasks': Task.objects.filter( user=request.user ).all().order_by( 'date_added' ),
+    #     'task_form': TaskForm( request.POST or None )
+    # }
+    # return render( request, 'task/task_list.html', context )

@@ -214,6 +214,7 @@ span {
 #add_new_task,
 input[type=text],
 input[type=password],
+input[type=email],
 label,
 #forgot_pass,
 #delete_task {

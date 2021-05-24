@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'task'
+    'task',
+    'forgot_password'
 ]
 
 MIDDLEWARE = [
@@ -124,3 +125,12 @@ MEDIA_ROOT = os.path.join( BASE_DIR, 'static_cdn', 'media_root' )
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'your email address'
+EMAIL_HOST_PASSWORD = 'email password'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+

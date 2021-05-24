@@ -22,6 +22,7 @@ from todoList_WithAjax import settings
 urlpatterns = [
     path( 'admin/', admin.site.urls ),
     path( '', include( 'task.urls' ) ),
+    path( '', include( 'forgot_password.urls' ) ),
 ]
 
 if settings.DEBUG:

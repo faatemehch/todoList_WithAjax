@@ -1,14 +1,14 @@
 {% extends 'base/mainLayout.html' %}
 {% block content %}
     <div id="user_component" class="shadow">
-        <h3 class="text-center">Dear Sarah!</h3>
+        <h3 class="text-center">Dear {{ request.user.username }}!</h3>
         <hr>
         <h4 class="text-center">Your Tasks</h4>
         <hr>
-{#        <h6 class="text-center">#}
-{#            <a href="creatTask.html"> Add New Task <i class="fa fa-plus" style="font-size:20px"></i></a>#}
-{#        </h6>#}
-{#        <hr>#}
+        {#        <h6 class="text-center">#}
+        {#            <a href="creatTask.html"> Add New Task <i class="fa fa-plus" style="font-size:20px"></i></a>#}
+        {#        </h6>#}
+        {#        <hr>#}
         <div class="text-center">
             <form class="form-inline text-center" id="search_form" method="post" data-url="{% url 'task_list' %}">
                 {% csrf_token %}
@@ -99,13 +99,12 @@
                 let url = 'complete_task/' + object_id;
                 $.ajax({
                     url: url,
-                    dataType: 'json',
                     success: function (response) {
                         if (response.task.complete === true) {
                             $('#task_list').append(
                                 '<tr id=' + response.task.id + '><td class="text-center numbering_table"> ' + table_row_count + ' </td><td colspan="2" class="task_title">'
                                 + response.task.task_title +
-                                ' </td> <td colspan="2" class="task_complete"><input type="checkbox"></td> <td class="text-center"> <a href="" class="delete_task" data-id=' + response.task.id + '> Done <li class="fa fa-edit"></li> </a> <a href="#" class="update_task" data-id=' + response.task.id + '>Delete<li class="fa fa-trash"></li> </a> </td> </tr>'
+                                ' </td> <td colspan="2" class="task_complete"><input type="checkbox"></td> <td class="text-center"> <a href="creatTask.html" class="delete_task" data-id=' + response.task.id + '> Done <li class="fa fa-edit"></li> </a> <a href="#" class="update_task" data-id=' + response.task.id + '>Delete<li class="fa fa-trash"></li> </a> </td> </tr>'
                             )
                         } else {
                             $('#task_list').append(
